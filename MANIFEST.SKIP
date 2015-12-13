@@ -4,6 +4,7 @@ cookie
 coverdb
 CVS
 diff$
+.git
 \bHTML\b
 (?i:ignore)
 (?i:junk)

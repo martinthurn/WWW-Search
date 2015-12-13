@@ -1,3 +1,7 @@
+2015-12-13  Kingpin  <martin@localhost.localdomain>
+
+	*  removed MYMETA files from distro (again)
+
 2015-06-06  Kingpin  <Martin@EV-9D9>
 
 	* lib/WWW/Search/Test.pm: removed Date::Manip::TZ setting
