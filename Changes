@@ -1,3 +1,7 @@
+2017-04-30  Kingpin  <martin@martin-M17x>
+
+	* Makefile.PL: fixed for Perl 5.26
+
 2015-12-13  Kingpin  <martin@localhost.localdomain>
 
 	*  removed MYMETA files from distro (again)
