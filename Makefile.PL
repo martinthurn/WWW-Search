@@ -4,7 +4,7 @@ use lib '.';
 
 use inc::Module::Install;
 
-version(2.517);
+version(2.519);
 all_from('lib/WWW/Search.pm');
 perl_version(5.005);
 license('perl');

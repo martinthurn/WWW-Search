@@ -1,3 +1,7 @@
+2020-04-03  Kingpin  <martin@ubuntu>
+
+	* lib/WWW/Search.pm (approximate_result_count): method can return undef rather than always zero
+
 2017-04-30  Kingpin  <martin@martin-M17x>
 
 	* Makefile.PL: fixed for Perl 5.26

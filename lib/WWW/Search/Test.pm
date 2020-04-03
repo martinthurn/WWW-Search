@@ -1,4 +1,3 @@
-# $rcs = ' $Id: Test.pm,v 2.293 2015-06-06 20:55:31 Martin Exp $ ' ;
 
 =head1 NAME
 
@@ -53,7 +52,7 @@ use vars qw( @EXPORT );
 
 use vars qw( $VERSION $bogus_query $websearch );
 
-$VERSION = do { my @r = (q$Revision: 2.293 $ =~ /\d+/g); sprintf "%d."."%03d" x $#r, @r };
+$VERSION = 2.294;
 $bogus_query = "Bogus" . $$ . "NoSuchWord" . time;
 
 ($MODE_DUMMY, $MODE_INTERNAL, $MODE_EXTERNAL, $MODE_UPDATE) = qw(dummy internal external update);
@@ -659,6 +658,8 @@ sub _tm_run_test
                                              qq{lower-bound num-hits for query=$sQuery});
     if ($iApprox)
       {
+      $iAnyFailure++ unless Test::More::isnt($oSearch->approximate_result_count, undef,
+                                               qq{approximate_result_count is defined});
       $iAnyFailure++ unless Test::More::cmp_ok($iMin, '<=', $oSearch->approximate_result_count,
                                                qq{lower-bound approximate_result_count});
       } # if
@@ -669,6 +670,8 @@ sub _tm_run_test
                                              qq{upper-bound num-hits for query=$sQuery});
     if ($iApprox)
       {
+      $iAnyFailure++ unless Test::More::isnt($oSearch->approximate_result_count, undef,
+                                               qq{approximate_result_count is defined});
       $iAnyFailure++ unless Test::More::cmp_ok($oSearch->approximate_result_count, '<=', $iMax,
                                                qq{upper-bound approximate_result_count});
       } # if
