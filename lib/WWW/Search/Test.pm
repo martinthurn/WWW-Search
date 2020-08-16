@@ -52,7 +52,7 @@ use vars qw( @EXPORT );
 
 use vars qw( $VERSION $bogus_query $websearch );
 
-$VERSION = 2.294;
+$VERSION = 2.295;
 $bogus_query = "Bogus" . $$ . "NoSuchWord" . time;
 
 ($MODE_DUMMY, $MODE_INTERNAL, $MODE_EXTERNAL, $MODE_UPDATE) = qw(dummy internal external update);
@@ -813,7 +813,7 @@ sub test_most_results
   my $iCount = scalar(@$rara);
   my $iAnyFailed = my $iResult = 0;
   my %hioExemplar;
-  my %hiiFailed;
+  my (%hiiFailed, %hsItem);
   # Create a bit vector large enough to hold one bit for each test:
   my $oV = new Bit::Vector($iCount);
   # Turn on all the bits (we will turn off bits when tests fail):
@@ -827,6 +827,7 @@ sub test_most_results
     # print STDERR " DDD ra is ", Dumper($ra);
     my ($sField, $sCmp, $sValue, $sDesc) = @$ra;
     $sDesc ||= qq{test #$iTest};
+    $hsItem{$sDesc}++;
     my $sCode;
     if ($sCmp eq 'like')
       {
@@ -849,7 +850,7 @@ if (! $sCode)
   {
   \$oV->Bit_Off($iTest);
   \$hiiFailed{'$sDesc'}++;
-  } # if
+  }
 ENDCODE
     $sCodeAll .= $sCode;
     $iTest++;
@@ -880,14 +881,15 @@ ENDCODE
       } # if
     } # foreach RESULT
   ok($iResult, qq{got more than zero results ($iResult, to be exact)});
-  # Now make sure all the sub-tests passed at least N% of the time.
-  # We only need to look at sub-tests that had any failures (sub-tests
-  # with no failures are 100% correct, so there's no need to check
-  # them 8-)
-  while (my ($sItem, $iFailed) = each %hiiFailed)
+  DEBUG && print STDERR Dumper("Failed test count: ", \%hiiFailed);
+  # Now make sure all the sub-tests passed at least N% of the time:
+  my $fPctMin = 1.0 - $fPct;
+  foreach my $sItem (keys %hsItem)
     {
+    my $iFailed = $hiiFailed{$sItem} || 0;
     my $fPctFailed = ($iFailed / $iResult);
-    ok($fPctFailed < (1 - $fPct), sprintf(qq{%0.1f%% of '%s' tests failed}, $fPctFailed * 100, $sItem));
+    printf(qq{%0.1f%% of '%s' tests failed\n}, $fPctFailed * 100, $sItem);
+    ok($fPctFailed <= $fPctMin, sprintf(qq{%0.1f%% of '%s' tests failed (need %0.1f%% to pass)}, $fPctFailed * 100, $sItem, $fPct*100));
     } # while
   if ($iAnyFailed)
     {
